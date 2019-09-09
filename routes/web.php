@@ -27,7 +27,24 @@ $router->post('user/login', 'UserController@login');
 $router->post('user/register', 'UserController@register');
 
 $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
-    $router->post('user/info','UserController@info');
-    $router->post('user/logout', 'UserController@logout');
+    $router->group(['middleware' => 'auth'], function () use ($router) {
+
+        $router->group(['prefix' => '/user'], function () use ($router) {
+            $router->post('info', 'UserController@info');
+            $router->post('logout', 'UserController@logout');
+        });
+
+        $router->group(['prefix' => 'service'], function () use ($router) {
+            $router->post('addMessage', 'CustomerServiceMessageController@addMessage');
+            $router->post('getMessage', 'CustomerServiceMessageController@getMessage');
+            $router->post('updateMessage', 'CustomerServiceMessageController@updateMessage');
+
+
+        });
+
+
+    });
+
 });
+
 
