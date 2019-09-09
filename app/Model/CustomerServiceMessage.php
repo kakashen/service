@@ -12,7 +12,7 @@ class CustomerServiceMessage extends Model
      * @var array
      */
     protected $fillable = [
-        'customer_service_id', 'message'
+        'user_id', 'message'
     ];
 
 
