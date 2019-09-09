@@ -12,11 +12,22 @@
 */
 
 $router->get('/', function () use ($router) {
-  return $router->app->version();
+    return $router->app->version();
 });
 
 
 $router->group([], function () use ($router) {
-  $router->get('profile', ['uses' => 'ExampleController@showProfile']);
+    $router->get('profile', ['uses' => 'ExampleController@showProfile']);
 
 });
+
+
+//登录注册
+$router->post('user/login', 'UserController@login');
+$router->post('user/register', 'UserController@register');
+
+$router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
+    $router->post('user/info','UserController@info');
+    $router->post('user/logout', 'UserController@logout');
+});
+
