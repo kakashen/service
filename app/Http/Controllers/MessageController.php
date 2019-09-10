@@ -41,7 +41,7 @@ class MessageController extends Controller
         if (!isset($communication_id)) {
             $communication_id = $comm->insertGetId([
                 'client_id' => $from,
-                'user_id' => $to,
+                'staff_id' => $to,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 

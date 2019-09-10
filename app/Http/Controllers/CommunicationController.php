@@ -40,7 +40,7 @@ class CommunicationController extends Controller
             $params['client_id'] = Auth::user()->id;
         }
         if ($type != 1) {
-            $params['user_id'] = Auth::user()->id;
+            $params['staff_id'] = Auth::user()->id;
         }
         $data = $this->communication->where($params)->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
