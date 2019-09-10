@@ -70,8 +70,6 @@ class MessageController extends Controller
 
     public function getMessage(Request $request)
     {
-        $user = Auth::user();
-
         $communication_id = $request->get('communication_id', 1);
 
         if (!isset($communication_id)) {
@@ -84,8 +82,6 @@ class MessageController extends Controller
             ->get();
 
         return response()->json(['message' => '发送成功', 'code' => 200, 'data' => $data]);
-
-
 
     }
 
