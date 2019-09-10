@@ -42,6 +42,12 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         });
 
+        $router->group(['prefix' => 'message'], function () use ($router) {
+            $router->post('sendMessage', 'MessageController@sendMessage');
+            $router->post('getMessage', 'MessageController@getMessage');
+
+
+        });
 
     });
 
