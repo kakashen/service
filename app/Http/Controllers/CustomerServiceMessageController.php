@@ -33,7 +33,7 @@ class CustomerServiceMessageController extends Controller
 
     }
 
-    public function getMessage(Request $request)
+    public function getMessage()
     {
         $user = Auth::user();
         $service_message = new CustomerServiceMessage();
