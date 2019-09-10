@@ -36,9 +36,9 @@ class MessageController extends Controller
             return response()->json(['message' => '方向不能为空', 'code' => 0]);
         }
 
-        if (!isset($communication_id)) {
+        $comm = new Communication();
 
-            $comm = new Communication();
+        if (!isset($communication_id)) {
             $communication_id = $comm->insertGetId([
                 'client_id' => $from,
                 'user_id' => $to,
@@ -49,6 +49,12 @@ class MessageController extends Controller
             if (!$communication_id) {
                 return response()->json(['message' => '创建会话失败', 'code' => 0]);
             }
+        }
+
+        $communication = $comm->where('status', 1)->find($communication_id);
+
+        if (!$communication) {
+            return response()->json(['message' => '当前会话已关闭', 'code' => 0]);
         }
 
         $message = $this->message;
