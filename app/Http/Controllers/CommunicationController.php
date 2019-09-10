@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Model\Communication;
-use App\Model\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,5 +31,18 @@ class CommunicationController extends Controller
 
     }
 
+    public function getCommunication(Request $request)
+    {
+        $type = $request->get('type', 1); // 1=客服
+        $params = [];
 
+        if ($type == 1) {
+            $params['client_id'] = Auth::user()->id;
+        }
+        if ($type != 1) {
+            $params['user_id'] = Auth::user()->id;
+        }
+        $data = $this->communication->where($params)->get();
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+    }
 }

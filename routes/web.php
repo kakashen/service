@@ -51,6 +51,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         $router->group(['prefix' => 'communication'], function () use ($router) {
             $router->post('end', 'CommunicationController@end');
+            $router->post('getCommunication', 'CommunicationController@getCommunication');
 
 
         });
