@@ -150,4 +150,20 @@ class MessageController extends Controller
         return response()->json(['message' => '发送失败', 'code' => 0]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 客户获取消息
+     */
+    public function cGetMessage(Request $request)
+    {
+        $client_id = $request->get('client_id');
+        if (!isset($client_id)) {
+            return response()->json(['message' => '客户id不能为空', 'code' => 0]);
+        }
+
+        $data = $this->message::where('client_id', $client_id)->get();
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+    }
+
 }
