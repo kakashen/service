@@ -23,8 +23,8 @@ $router->group([], function () use ($router) {
 
 
 //登录注册
-$router->post('user/login', 'StaffController@login');
-$router->post('user/register', 'StaffController@register');
+$router->post('staff/login', 'StaffController@login');
+$router->post('staff/register', 'StaffController@register');
 
 $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
