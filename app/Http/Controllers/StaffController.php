@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Communication;
 use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -66,6 +67,15 @@ class StaffController extends Controller
     public function updateStatus(Request $request)
     {
         $status = $request->get('status', 1);
+        if ($status != 1) {
+            // 有未结束会话不能为非上线状态
+            $staff_id = Auth::user()->id;
+            $count = Communication::where('staff_id', $staff_id)
+                ->where('status', 1)->count();
+            if ($count) {
+                return response()->json(['message' => '请先结束会话', 'code' => 0]);
+            }
+        }
         // 过期的 token 不应该还请求后端 delete（也就不存在服务端报错），直接前端清除缓存退出即可
         $ret = $this->staff::where('id', Auth::user()->id)->update(['status' => $status]);
         if ($ret) {
