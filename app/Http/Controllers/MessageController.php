@@ -91,4 +91,58 @@ class MessageController extends Controller
 
     }
 
+    public function cSendMessage(Request $request)
+    {
+        $client_id = $request->get('client_id');
+        $staff_id = $request->get('staff_id');
+        $content = $request->get('content');
+        $type = $request->get('type');
+        $communication_id = $request->get('communication_id');
+
+        if (!isset($client_id)) {
+            return response()->json(['message' => '发送人不能为空', 'code' => 0]);
+        }
+        if (!isset($staff_id)) {
+            return response()->json(['message' => '接收人不能为空', 'code' => 0]);
+        }
+        if (!isset($content)) {
+            return response()->json(['message' => '消息内容不能为空', 'code' => 0]);
+        }
+        if (!isset($type)) {
+            return response()->json(['message' => '消息类型不能为空', 'code' => 0]);
+        }
+
+        $comm = new Communication();
+
+        $communication = $comm->where('status', 1)->find($communication_id);
+
+        if (!isset($communication_id) || !$communication) {
+            $communication_id = $comm->insertGetId([
+                'client_id' => $client_id,
+                'staff_id' => $staff_id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+
+            ]);
+            if (!$communication_id) {
+                return response()->json(['message' => '创建会话失败', 'code' => 0]);
+            }
+            return response()->json(['message' => '当前会话已关闭', 'code' => 0]);
+        }
+
+        $message = $this->message;
+        $message->client_id = $client_id;
+        $message->staff_id = $staff_id;
+        $message->content = $content;
+        $message->direction = 1;
+        $message->type = $type;
+        $message->communication_id = $communication_id;
+        $ret = $message->save();
+        if ($ret) {
+            return response()->json(['message' => '发送成功', 'code' => 200]);
+
+        }
+        return response()->json(['message' => '发送失败', 'code' => 0]);
+    }
+
 }
