@@ -76,7 +76,7 @@ class MessageController extends Controller
 
     public function getMessage(Request $request)
     {
-        $communication_id = $request->get('communication_id', 1);
+        $communication_id = $request->get('communication_id');
 
         if (!isset($communication_id)) {
             return response()->json(['message' => '会话不能为空', 'code' => 0]);
