@@ -51,7 +51,8 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         $router->group(['prefix' => 'communication'], function () use ($router) {
             $router->post('end', 'CommunicationController@end');
-            $router->post('communicationWithClient', 'CommunicationController@communicationWithClient');
+            // 同客户获取会话
+            $router->post('communicationWithClient', 'CommunicationController@cCommunication');
 
 
         });
