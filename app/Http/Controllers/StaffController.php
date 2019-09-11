@@ -6,15 +6,16 @@ use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\This;
 
-class UserController extends Controller
+class StaffController extends Controller
 {
-    private $user;
+    private $staff;
     private $salt;
 
-    public function __construct(Staff $user)
+    public function __construct(Staff $staff)
     {
-        $this->user = $user;
+        $this->staff = $staff;
         $this->salt = "userLoginRegister";
     }
 
@@ -30,13 +31,13 @@ class UserController extends Controller
             return response()->json(['message' => '请输入密码', 'code' => 0]);
         }
 
-        $user = Staff::where('username', $username)->where('password', sha1($this->salt . $password))->first();
-        if ($user) {
-            $user->api_token = uniqid();
-            $user->status = $request->get('status') ?? 1; // 登录状态
-            $user->save();
+        $staff = $this->staff::where('username', $username)->where('password', sha1($this->salt . $password))->first();
+        if ($staff) {
+            $staff->api_token = uniqid();
+            $staff->status = $request->get('status') ?? 1; // 登录状态
+            $staff->save();
             return response()->json(['message' => '登录成功', 'code' => 200,
-                'data' => $user]);
+                'data' => $staff]);
         } else {
             return response()->json(['message' => '账号或密码错误', 'code' => 0]);
         }
@@ -47,11 +48,11 @@ class UserController extends Controller
     public function register(Request $request)
     {
         if ($request->has('username') && $request->has('password')) {
-            $user = new Staff;
-            $user->username = $request->input('username');
-            $user->password = sha1($this->salt . $request->input('password'));
-            $user->api_token = Str::random(32);;
-            if ($user->save()) {
+            $staff = $this->staff;
+            $staff->username = $request->input('username');
+            $staff->password = sha1($this->salt . $request->input('password'));
+            $staff->api_token = Str::random(32);;
+            if ($staff->save()) {
                 return response()->json(['message' => '注册成功', 'code' => 200]);
             } else {
                 return response()->json(['message' => '注册失败, 请稍后再试', 'code' => 0]);
@@ -62,14 +63,15 @@ class UserController extends Controller
         }
     }
 
-    public function logout()
+    public function updateStatus(Request $request)
     {
+        $status = $request->get('status', 1);
         // 过期的 token 不应该还请求后端 delete（也就不存在服务端报错），直接前端清除缓存退出即可
-        $ret = Staff::where('id', Auth::user()->id)->update('status', 0);
+        $ret = $this->staff::where('id', Auth::user()->id)->update(['status' => $status]);
         if ($ret) {
-            return response()->json(['message' => '退出成功', 'code' => 200]);
+            return response()->json(['message' => '修改状态成功', 'code' => 200]);
         }
-        return response()->json(['message' => '退出失败', 'code' => 0]);
+        return response()->json(['message' => '修改状态失败', 'code' => 0]);
 
     }
 
