@@ -87,7 +87,7 @@ class MessageController extends Controller
             ->where('communication_id', $communication_id)
             ->get();
 
-        return response()->json(['message' => '发送成功', 'code' => 200, 'data' => $data]);
+        return response()->json(['message' => '获取消息成功', 'code' => 200, 'data' => $data]);
 
     }
 
