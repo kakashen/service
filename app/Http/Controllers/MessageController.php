@@ -91,6 +91,11 @@ class MessageController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 客户发送消息
+     */
     public function cSendMessage(Request $request)
     {
         $client_id = $request->get('client_id');
