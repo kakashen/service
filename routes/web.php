@@ -51,10 +51,27 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         $router->group(['prefix' => 'communication'], function () use ($router) {
             $router->post('end', 'CommunicationController@end');
-            $router->post('getCommunication', 'CommunicationController@getCommunication');
+            $router->post('communicationWithClient', 'CommunicationController@communicationWithClient');
 
 
         });
+
+    });
+
+});
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+
+    $router->group(['prefix' => 'client/message'], function () use ($router) {
+        $router->post('cSendMessage', 'MessageController@cSendMessage');
+        $router->post('cGetMessage', 'MessageController@cGetMessage');
+
+
+    });
+    $router->group(['prefix' => 'client/communication'], function () use ($router) {
+        $router->post('cEnd', 'CommunicationController@cEnd');
+        $router->post('cCommunication', 'CommunicationController@cCommunication');
+
 
     });
 
