@@ -49,6 +49,14 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         });
 
+        $router->group(['prefix' => 'chat'], function () use ($router) {
+            $router->post('get', 'ActiveChatController@get'); // 客服活动聊天窗口
+            $router->post('delete', 'ActiveChatController@delete');
+
+
+        });
+
+
         $router->group(['prefix' => 'communication'], function () use ($router) {
             $router->post('end', 'CommunicationController@end');
             // 同客户获取会话
