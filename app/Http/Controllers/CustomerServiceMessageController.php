@@ -18,7 +18,7 @@ class CustomerServiceMessageController extends Controller
         //
     }
 
-    public function addMessage(Request $request)
+    public function add(Request $request)
     {
         $message = $request->get('message');
         $user = Auth::user();
@@ -33,7 +33,7 @@ class CustomerServiceMessageController extends Controller
 
     }
 
-    public function getMessage()
+    public function get()
     {
         $user = Auth::user();
         $service_message = new CustomerServiceMessage();
@@ -46,7 +46,7 @@ class CustomerServiceMessageController extends Controller
 
     }
 
-    public function updateMessage(Request $request)
+    public function update(Request $request)
     {
         $message = $request->input('message');
         if (empty($message)) {

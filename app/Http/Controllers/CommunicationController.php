@@ -35,7 +35,7 @@ class CommunicationController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * 客户获取会话id
      */
-    public function cCommunication(Request $request)
+    public function cGet(Request $request)
     {
         $client_id = $request->get('client_id');
         if (!$client_id) {

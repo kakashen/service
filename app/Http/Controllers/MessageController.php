@@ -16,7 +16,7 @@ class MessageController extends Controller
         $this->message = $message;
     }
 
-    public function sendMessage(Request $request)
+    public function send(Request $request)
     {
         $user = Auth::user();
         $from = $user->id; // 发送人id
@@ -74,7 +74,7 @@ class MessageController extends Controller
 
     }
 
-    public function getMessage(Request $request)
+    public function get(Request $request)
     {
         $communication_id = $request->get('communication_id');
 
@@ -96,7 +96,7 @@ class MessageController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * 客户发送消息
      */
-    public function cSendMessage(Request $request)
+    public function cSend(Request $request)
     {
         $client_id = $request->get('client_id');
         $staff_id = $request->get('staff_id');
@@ -155,7 +155,7 @@ class MessageController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * 客户获取消息
      */
-    public function cGetMessage(Request $request)
+    public function cGet(Request $request)
     {
         $client_id = $request->get('client_id');
         if (!isset($client_id)) {

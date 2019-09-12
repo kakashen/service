@@ -35,16 +35,16 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
         });
 
         $router->group(['prefix' => 'service'], function () use ($router) {
-            $router->post('addMessage', 'CustomerServiceMessageController@addMessage');
-            $router->post('getMessage', 'CustomerServiceMessageController@getMessage');
-            $router->post('updateMessage', 'CustomerServiceMessageController@updateMessage');
+            $router->post('add', 'CustomerServiceMessageController@add');
+            $router->post('get', 'CustomerServiceMessageController@get');
+            $router->post('update', 'CustomerServiceMessageController@update');
 
 
         });
 
         $router->group(['prefix' => 'message'], function () use ($router) {
-            $router->post('sendMessage', 'MessageController@sendMessage');
-            $router->post('getMessage', 'MessageController@getMessage');
+            $router->post('send', 'MessageController@send');
+            $router->post('get', 'MessageController@get');
 
 
         });
@@ -64,14 +64,16 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'client/message'], function () use ($router) {
-        $router->post('cSendMessage', 'MessageController@cSendMessage');
-        $router->post('cGetMessage', 'MessageController@cGetMessage');
+        $router->post('cSend', 'MessageController@cSend');
+        $router->post('cGet', 'MessageController@cGet');
+        $router->post('cGetNew', 'MessageController@cGetNewMessage');
+
 
 
     });
     $router->group(['prefix' => 'client/communication'], function () use ($router) {
         $router->post('cEnd', 'CommunicationController@cEnd');
-        $router->post('cCommunication', 'CommunicationController@cCommunication');
+        $router->post('cGet', 'CommunicationController@cGet');
 
 
     });
