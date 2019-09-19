@@ -23,13 +23,13 @@ $router->group([], function () use ($router) {
 
 
 //登录注册
-$router->post('staff/login', 'StaffController@login');
-$router->post('staff/register', 'StaffController@register');
+$router->post('/api/staff/login', 'StaffController@login');
+$router->post('/api/staff/register', 'StaffController@register');
 
 $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
 
-        $router->group(['prefix' => '/user'], function () use ($router) {
+        $router->group(['prefix' => '/staff'], function () use ($router) {
             $router->post('info', 'StaffController@info');
             $router->post('updateStatus', 'StaffController@updateStatus');
         });
