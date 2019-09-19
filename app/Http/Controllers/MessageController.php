@@ -153,16 +153,16 @@ class MessageController extends Controller
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * 客户获取消息
+     * 客户根据会话id获取消息
      */
     public function cGet(Request $request)
     {
-        $client_id = $request->get('client_id');
-        if (!isset($client_id)) {
-            return response()->json(['message' => '客户id不能为空', 'code' => 0]);
+        $communication_id = $request->get('communication_id');
+        if (!isset($communication_id)) {
+            return response()->json(['message' => '会话id不能为空', 'code' => 0]);
         }
 
-        $data = $this->message::where('client_id', $client_id)->get();
+        $data = $this->message::where('communication_id', $communication_id)->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
 

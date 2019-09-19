@@ -71,14 +71,17 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
+    // 消息
     $router->group(['prefix' => 'client/message'], function () use ($router) {
         $router->post('cSend', 'MessageController@cSend');
         $router->post('cGet', 'MessageController@cGet');
-        $router->post('cGetNew', 'MessageController@cGetNewMessage');
+        $router->post('cGetNew', 'MessageController@cGetNew');
 
 
 
     });
+
+    // 会话
     $router->group(['prefix' => 'client/communication'], function () use ($router) {
         $router->post('cEnd', 'CommunicationController@cEnd');
         $router->post('cGet', 'CommunicationController@cGet');
