@@ -74,7 +74,7 @@ class MessageController extends Controller
 
     }
 
-    public function get(Request $request)
+    public function getAll(Request $request)
     {
         $communication_id = $request->get('communication_id');
 

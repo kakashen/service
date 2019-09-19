@@ -44,7 +44,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         $router->group(['prefix' => 'message'], function () use ($router) {
             $router->post('send', 'MessageController@send');
-            $router->post('get', 'MessageController@get');
+            $router->post('getAll', 'MessageController@getAll');
 
 
         });
@@ -60,7 +60,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
         $router->group(['prefix' => 'communication'], function () use ($router) {
             $router->post('end', 'CommunicationController@end');
             // 同客户获取会话
-            $router->post('communicationWithClient', 'CommunicationController@cCommunication');
+            $router->post('withClient', 'CommunicationController@communication');
 
 
         });
