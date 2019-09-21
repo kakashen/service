@@ -23,7 +23,7 @@ class CustomerServiceMessageController extends Controller
         $message = $request->get('message');
         $user = Auth::user();
         $service_message = new CustomerServiceMessage();
-        $service_message->customer_service_id = $user->id;
+        $service_message->staff_id = $user->id;
         $service_message->message = $message;
         $ret = $service_message->save();
         if ($ret) {
