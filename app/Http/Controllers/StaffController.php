@@ -7,7 +7,6 @@ use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\Types\This;
 
 class StaffController extends Controller
 {
@@ -52,7 +51,7 @@ class StaffController extends Controller
             $staff = $this->staff;
             $staff->username = $request->input('username');
             $staff->password = sha1($this->salt . $request->input('password'));
-            $staff->api_token = Str::random(32);;
+            $staff->api_token = uniqid();
             if ($staff->save()) {
                 return response()->json(['message' => '注册成功', 'code' => 200]);
             } else {
