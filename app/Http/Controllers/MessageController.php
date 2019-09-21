@@ -121,9 +121,7 @@ class MessageController extends Controller
 
         $comm = new Communication();
 
-        $communication = $comm->where('status', 1)->find($communication_id);
-
-        if (!isset($communication_id) || !$communication) {
+        if (!isset($communication_id)) {
             $communication_id = $comm->insertGetId([
                 'client_id' => $client_id,
                 'staff_id' => $staff_id,
