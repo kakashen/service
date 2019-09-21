@@ -134,7 +134,6 @@ class MessageController extends Controller
             if (!$communication_id) {
                 return response()->json(['message' => '创建会话失败', 'code' => 0]);
             }
-            return response()->json(['message' => '当前会话已关闭', 'code' => 0]);
         }
 
         $message = $this->message;
@@ -147,7 +146,6 @@ class MessageController extends Controller
         $ret = $message->save();
         if ($ret) {
             return response()->json(['message' => '发送成功', 'code' => 200]);
-
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
     }
