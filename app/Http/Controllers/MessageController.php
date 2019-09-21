@@ -19,15 +19,15 @@ class MessageController extends Controller
     public function send(Request $request)
     {
         $user = Auth::user();
-        $from = $user->id; // 发送人id
-        $to = $request->get('to'); // 接收人id
+        $staff_id = $user->id; // 发送人id
+        $client_id = $request->get('client_id'); // 接收人id
         $content = $request->get('content');
-        $direction = $request->get('direction'); // 1客户发给客服, 2客服发给客户
-        $type = $request->get('type', 1);
+        $type = $request->get('type');
+        $direction = $request->get('direction');
         $communication_id = $request->get('communication_id');
 
-        if (!isset($to)) {
-            return response()->json(['message' => '接收人不能为空', 'code' => 0]);
+        if (!isset($client_id)) {
+            return response()->json(['message' => '客户id不能为空', 'code' => 0]);
         }
         if (!isset($content)) {
             return response()->json(['message' => '内容不能为空', 'code' => 0]);
@@ -40,8 +40,8 @@ class MessageController extends Controller
 
         if (!isset($communication_id)) {
             $communication_id = $comm->insertGetId([
-                'client_id' => $from,
-                'staff_id' => $to,
+                'client_id' => $client_id,
+                'staff_id' => $staff_id,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
 
@@ -58,13 +58,12 @@ class MessageController extends Controller
         }
 
         $message = $this->message;
-        $message->from = $from;
-        $message->to = $to;
+        $message->staff_id = $staff_id;
+        $message->client_id = $client_id;
         $message->content = $content;
         $message->direction = $direction;
         $message->type = $type;
         $message->communication_id = $communication_id;
-        $message->from = $from;
         $ret = $message->save();
         if ($ret) {
             return response()->json(['message' => '发送成功', 'code' => 200]);
