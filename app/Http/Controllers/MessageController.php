@@ -35,6 +35,9 @@ class MessageController extends Controller
         if (!isset($direction)) {
             return response()->json(['message' => '方向不能为空', 'code' => 0]);
         }
+        if (!isset($type)) {
+            return response()->json(['message' => '类型不能为空', 'code' => 0]);
+        }
 
         $comm = new Communication();
 
