@@ -61,12 +61,6 @@ class MessageController extends Controller
         }
 
         $message = $this->message;
-        $message->staff_id = $staff_id;
-        $message->client_id = $client_id;
-        $message->content = $content;
-        $message->direction = $direction;
-        $message->type = $type;
-        $message->communication_id = $communication_id;
 
         $time = date('Y-m-d H:i:s');
         $message_id = $message->insertGetId([
@@ -117,19 +111,23 @@ class MessageController extends Controller
         $staff_id = $request->get('staff_id');
         $content = $request->get('content');
         $type = $request->get('type');
+        $direction = $request->get('direction');
         $communication_id = $request->get('communication_id');
 
         if (!isset($client_id)) {
-            return response()->json(['message' => '发送人不能为空', 'code' => 0]);
+            return response()->json(['message' => '客户不能为空', 'code' => 0]);
         }
         if (!isset($staff_id)) {
-            return response()->json(['message' => '接收人不能为空', 'code' => 0]);
+            return response()->json(['message' => '客服不能为空', 'code' => 0]);
         }
         if (!isset($content)) {
             return response()->json(['message' => '消息内容不能为空', 'code' => 0]);
         }
         if (!isset($type)) {
             return response()->json(['message' => '消息类型不能为空', 'code' => 0]);
+        }
+        if (!isset($direction)) {
+            return response()->json(['message' => '方向不能为空', 'code' => 0]);
         }
 
         $comm = new Communication();
@@ -147,16 +145,22 @@ class MessageController extends Controller
             }
         }
 
-        $message = $this->message;
-        $message->client_id = $client_id;
-        $message->staff_id = $staff_id;
-        $message->content = $content;
-        $message->direction = 1;
-        $message->type = $type;
-        $message->communication_id = $communication_id;
-        $ret = $message->save();
-        if ($ret) {
-            return response()->json(['message' => '发送成功', 'code' => 200]);
+        $time = date('Y-m-d H:i:s');
+        $message_id = $this->message->insertGetId([
+            'client_id' => $client_id,
+            'staff_id' => $staff_id,
+            'content' => $content,
+            'direction' => $direction,
+            'type' => $type,
+            'communication_id' => $communication_id,
+            'created_at' => $time,
+            'updated_at' => $time,
+
+        ]);
+        if ($message_id) {
+            return response()->json(['message' => '发送成功', 'code' => 200,
+                'data' => [['id' => $message_id, 'created_at' => $time]]]);
+
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
     }
