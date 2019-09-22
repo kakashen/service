@@ -67,9 +67,22 @@ class MessageController extends Controller
         $message->direction = $direction;
         $message->type = $type;
         $message->communication_id = $communication_id;
-        $ret = $message->save();
-        if ($ret) {
-            return response()->json(['message' => '发送成功', 'code' => 200]);
+
+        $time = date('Y-m-d H:i:s');
+        $message_id = $message->insertGetId([
+            'client_id' => $client_id,
+            'staff_id' => $staff_id,
+            'content' => $content,
+            'direction' => $direction,
+            'type' => $type,
+            'communication_id' => $communication_id,
+            'created_at' => $time,
+            'updated_at' => $time,
+
+        ]);
+        if ($message_id) {
+            return response()->json(['message' => '发送成功', 'code' => 200,
+                'data' => [['id' => $message_id, 'created_at' => $time]]]);
 
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
