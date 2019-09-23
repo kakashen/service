@@ -198,8 +198,16 @@ class MessageController extends Controller
             return response()->json(['message' => '客户id不能为空', 'code' => 0]);
         }
 
-        $data = $this->message::where('id', '>', $message_id)
-            ->where('client_id', $client_id)->get();
+        $query = $this->message::where('id', '>', $message_id)
+            ->where('client_id', $client_id)
+            ->where('direction', 2);
+        $list = $query->get();
+        $max_unread = $query->where('is_read', 0)->first();
+
+        $data = [
+            'list' => $list,
+            'max_unread' => $max_unread['id']
+        ];
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
 
