@@ -76,7 +76,7 @@ class MessageController extends Controller
         ]);
         if ($message_id) {
             return response()->json(['message' => '发送成功', 'code' => 200,
-                'data' => [['id' => $message_id, 'created_at' => $time]]]);
+                'data' => ['id' => $message_id, 'created_at' => $time]]);
 
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
