@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\ActiveChat;
 use App\Model\Communication;
 use App\Model\Message;
 use Illuminate\Http\Request;
@@ -204,4 +205,45 @@ class MessageController extends Controller
 
     }
 
+    public function getNew(Request $request)
+    {
+        $staff_id = Auth::user()->id;
+        $list = [];
+        $ids = ActiveChat::select('client_id')->where('staff_id', $staff_id)->get()->toArray();
+        $client_ids = [];
+        $data = $request->get('data');
+        foreach ($data as $datum) {
+            if (!isset($datum['client_id'], $datum['message_id'])) continue;
+            $query = $this->message->where('id', '>', $datum['message_id'])
+                ->where('client_id', $datum['client_id'])
+                ->where('staff_id', $staff_id)
+                ->where('direction', 1);
+            $messages = $query->get();
+            $client_ids[] = $datum['client_id'];
+
+            $max_unread = $query->where('is_read', 0)->select('id')->first();
+
+            $list[] = [
+                'list' => $messages,
+                'max_unread' => $max_unread['id']
+            ];
+        }
+
+        $diffs = array_diff(array_column($ids, 'client_id'), $client_ids);
+
+        foreach ($diffs as $diff) {
+            $query = $diff_msg = $this->message
+                ->where('client_id', $diff)
+                ->where('staff_id', $staff_id)
+                ->where('direction', 1);
+            $diff_msg = $query->get();
+
+            $max_unread = $query->where('is_read', 0)->select('id')->first();
+            $list[] = [
+                'list' => $diff_msg,
+                'max_unread' => $max_unread['id']
+            ];
+        }
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $list]);
+    }
 }
