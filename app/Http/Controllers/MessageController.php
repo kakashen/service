@@ -112,7 +112,7 @@ class MessageController extends Controller
         $client_id = $request->get('client_id');
         $staff_id = $request->get('staff_id');
         if (!isset($staff_id)) {
-            $ids = $this->getIdleStaffIds();
+            $ids = array_column($this->getIdleStaffIds(), 'id');
             $count = count($ids);
             if ($count == 0) {
                 return response()->json([
@@ -120,13 +120,12 @@ class MessageController extends Controller
                     'code' => 0
                 ]);
             }
-            $staff_id = $ids[rand(0, count($ids))];
+            $staff_id = $ids[rand(0, $count)];
         }
 
         $content = $request->get('content');
         $type = $request->get('type');
         $direction = $request->get('direction');
-        $communication_id = $request->get('communication_id');
 
         if (!isset($client_id)) {
             return response()->json(['message' => '客户不能为空', 'code' => 0]);
@@ -144,15 +143,11 @@ class MessageController extends Controller
             return response()->json(['message' => '方向不能为空', 'code' => 0]);
         }
 
-        if (!isset($communication_id)) {
-            $communication_id = $this->getCommunicationId($client_id, $staff_id);
-        }
+        $communication_id = Communication::select('id')->where('status', 1)
+            ->where('client_id', $client_id)->first()->id ?? null;
 
-        if ($communication_id) {
-            $ret = Communication::where('status', 1)->find($communication_id);
-            if (!$ret) {
-                $communication_id = $this->getCommunicationId($client_id, $staff_id);
-            }
+        if (!$communication_id) {
+            $communication_id = $this->getCommunicationId($client_id, $staff_id);
         }
 
         $time = date('Y-m-d H:i:s');
