@@ -120,7 +120,8 @@ class MessageController extends Controller
                     'code' => 0
                 ]);
             }
-            $staff_id = $ids[rand(0, $count)];
+
+            $staff_id = $ids[rand(0, $count-1)];
         }
 
         $content = $request->get('content');
