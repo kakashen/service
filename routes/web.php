@@ -46,6 +46,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('send', 'MessageController@send');
             $router->post('getAll', 'MessageController@getAll');
             $router->post('getNew', 'MessageController@getNew');
+            $router->post('isRead', 'MessageController@isRead');
 
 
         });
@@ -77,6 +78,8 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('cSend', 'MessageController@cSend');
         $router->post('cGet', 'MessageController@cGet');
         $router->post('cGetNew', 'MessageController@cGetNew');
+        $router->post('isRead', 'MessageController@isRead');
+
 
 
 

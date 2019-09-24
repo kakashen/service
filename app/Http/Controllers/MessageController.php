@@ -267,4 +267,33 @@ class MessageController extends Controller
         ]);
         return $communication_id;
     }
+
+    public function isRead(Request $request)
+    {
+        $communication_id = $request->get('communication_id');
+        if (!isset($communication_id)) {
+            return response()->json(['message' => '会话id不能为空', 'code' => 0]);
+        }
+
+        $client_id = $request->get('client_id');
+
+        $query = $this->message->where('communication_id', $communication_id);
+
+        if ($client_id) {
+            $query->where('client_id', $client_id);
+        } else {
+            $query->where('staff_id', Auth::user()->id ?? 0);
+        }
+
+        $ret = $query->update([
+            'is_read' => 1
+        ]);
+
+        if ($ret) {
+            return response()->json(['message' => '已读成功', 'code' => 200]);
+
+        }
+        return response()->json(['message' => '已读失败', 'code' => 0]);
+
+    }
 }
