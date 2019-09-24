@@ -26,7 +26,6 @@ class MessageController extends Controller
         $content = $request->get('content');
         $type = $request->get('type');
         $direction = $request->get('direction');
-        $communication_id = $request->get('communication_id');
 
         if (!isset($client_id)) {
             return response()->json(['message' => '客户id不能为空', 'code' => 0]);
@@ -41,25 +40,13 @@ class MessageController extends Controller
             return response()->json(['message' => '类型不能为空', 'code' => 0]);
         }
 
-        $comm = new Communication();
-
-        if (!isset($communication_id)) {
-            $communication_id = $comm->insertGetId([
-                'client_id' => $client_id,
-                'staff_id' => $staff_id,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-
-            ]);
-            if (!$communication_id) {
-                return response()->json(['message' => '创建会话失败', 'code' => 0]);
-            }
+        $communication = Communication::where('client_id', $client_id)->first();
+        if (!$communication) {
+            return response()->json(['message' => '该用户无会话', 'code' => 0]);
         }
 
-        $communication = $comm->where('status', 1)->find($communication_id);
-
-        if (!$communication) {
-            return response()->json(['message' => '当前会话已关闭', 'code' => 0]);
+        if ($communication->status == 0) {
+            return response()->json(['message' => '该用户会话已关闭', 'code' => 0]);
         }
 
         $message = $this->message;
@@ -121,7 +108,7 @@ class MessageController extends Controller
                 ]);
             }
 
-            $staff_id = $ids[rand(0, $count-1)];
+            $staff_id = $ids[rand(0, $count - 1)];
         }
 
         $content = $request->get('content');
@@ -145,7 +132,7 @@ class MessageController extends Controller
         }
 
         $communication_id = Communication::select('id')->where('status', 1)
-            ->where('client_id', $client_id)->first()->id ?? null;
+                ->where('client_id', $client_id)->first()->id ?? null;
 
         if (!$communication_id) {
             $communication_id = $this->getCommunicationId($client_id, $staff_id);
