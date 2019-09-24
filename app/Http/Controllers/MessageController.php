@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\ActiveChat;
 use App\Model\Communication;
 use App\Model\Message;
+use App\Model\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -110,6 +111,18 @@ class MessageController extends Controller
     {
         $client_id = $request->get('client_id');
         $staff_id = $request->get('staff_id');
+        if (!isset($staff_id)) {
+            $ids = $this->getIdleStaffIds();
+            $count = count($ids);
+            if ($count == 0) {
+                return response()->json([
+                    'message' => '浣洗智能客服提醒您，人工服务前忙，请稍后再试，谢谢~',
+                    'code' => 0
+                ]);
+            }
+            $staff_id = $ids[rand(0, count($ids))];
+        }
+
         $content = $request->get('content');
         $type = $request->get('type');
         $direction = $request->get('direction');
@@ -131,18 +144,14 @@ class MessageController extends Controller
             return response()->json(['message' => '方向不能为空', 'code' => 0]);
         }
 
-        $comm = new Communication();
-
         if (!isset($communication_id)) {
-            $communication_id = $comm->insertGetId([
-                'client_id' => $client_id,
-                'staff_id' => $staff_id,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+            $communication_id = $this->getCommunicationId($client_id, $staff_id);
+        }
 
-            ]);
-            if (!$communication_id) {
-                return response()->json(['message' => '创建会话失败', 'code' => 0]);
+        if ($communication_id) {
+            $ret = Communication::where('status', 1)->find($communication_id);
+            if (!$ret) {
+                $communication_id = $this->getCommunicationId($client_id, $staff_id);
             }
         }
 
@@ -156,12 +165,10 @@ class MessageController extends Controller
             'communication_id' => $communication_id,
             'created_at' => $time,
             'updated_at' => $time,
-
         ]);
         if ($message_id) {
             return response()->json(['message' => '发送成功', 'code' => 200,
-                'data' => [['id' => $message_id, 'created_at' => $time]]]);
-
+                'data' => ['id' => $message_id, 'created_at' => $time]]);
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
     }
@@ -253,5 +260,22 @@ class MessageController extends Controller
             ];
         }
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $list]);
+    }
+
+    private function getIdleStaffIds(): array
+    {
+        return Staff::select('id')->where('status', 1)->get()->toArray();
+    }
+
+    private function getCommunicationId($client_id, $staff_id)
+    {
+        $comm = new Communication();
+        $communication_id = $comm->insertGetId([
+            'client_id' => $client_id,
+            'staff_id' => $staff_id,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        return $communication_id;
     }
 }
