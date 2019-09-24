@@ -18,6 +18,11 @@ class MessageController extends Controller
         $this->message = $message;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 客服发送消息
+     */
     public function send(Request $request)
     {
         $user = Auth::user();
@@ -58,7 +63,7 @@ class MessageController extends Controller
             'content' => $content,
             'direction' => $direction,
             'type' => $type,
-            'communication_id' => $communication_id,
+            'communication_id' => $communication->id,
             'created_at' => $time,
             'updated_at' => $time,
 
