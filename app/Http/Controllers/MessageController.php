@@ -45,7 +45,8 @@ class MessageController extends Controller
             return response()->json(['message' => '类型不能为空', 'code' => 0]);
         }
 
-        $communication = Communication::where('client_id', $client_id)->first();
+        $communication = Communication::where('client_id', $client_id)->orderBy('id', 'desc')->first();
+
         if (!$communication) {
             return response()->json(['message' => '该用户无会话', 'code' => 0]);
         }
@@ -137,7 +138,7 @@ class MessageController extends Controller
         }
 
         $communication_id = Communication::select('id')->where('status', 1)
-                ->where('client_id', $client_id)->first()->id ?? null;
+                ->where('client_id', $client_id)->orderBy('id', 'desc')->first()->id ?? null;
 
         if (!$communication_id) {
             $communication_id = $this->getCommunicationId($client_id, $staff_id);
@@ -197,7 +198,7 @@ class MessageController extends Controller
             ->where('client_id', $client_id)
             ->where('direction', 2);
         $list = $query->get();
-        $max_unread = $query->where('is_read', 0)->first();
+        $max_unread = $query->where('is_read', 0)->orderBy('id', 'desc')->first();
 
         $data = [
             'list' => $list,
@@ -224,7 +225,7 @@ class MessageController extends Controller
             $messages = $query->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_unread = $query->where('is_read', 0)->select('id')->first();
+            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
@@ -241,7 +242,7 @@ class MessageController extends Controller
                 ->where('direction', 1);
             $diff_msg = $query->get();
 
-            $max_unread = $query->where('is_read', 0)->select('id')->first();
+            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
                 'max_unread' => $max_unread['id']
