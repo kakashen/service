@@ -85,9 +85,18 @@ class StaffController extends Controller
     }
 
 
-    //信息
-    public function info()
+    //客服信息
+    public function info(Request $request)
     {
-        return Auth::user();
+        $staff_id = $request->get('staff_id');
+        if (!isset($staff_id)) {
+            return response()->json(['message' => '客服id不能为空', 'code' => 0]);
+        }
+
+        $info = Staff::select(['id', 'username', 'avatar'])
+            ->where('id', $staff_id)->first();
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $info]);
+
+
     }
 }
