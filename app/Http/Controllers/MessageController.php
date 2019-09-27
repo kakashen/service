@@ -226,7 +226,7 @@ class MessageController extends Controller
             $messages = $query->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
+            $max_unread = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
