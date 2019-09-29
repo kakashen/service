@@ -8,6 +8,7 @@ use App\Model\Message;
 use App\Model\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -226,11 +227,11 @@ class MessageController extends Controller
             $messages = $query->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_unread = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            // $max_unread = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
-                'max_unread' => $max_unread['id'],
+                //'max_unread' => $max_unread['id'],
                 'client_id' => $datum['client_id']
             ];
         }
@@ -244,10 +245,10 @@ class MessageController extends Controller
                 ->where('direction', 1);
             $diff_msg = $query->get();
 
-            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
+            // $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
-                'max_unread' => $max_unread['id'],
+                // 'max_unread' => $max_unread['id'],
                 'client_id' => $diff
             ];
         }
@@ -288,13 +289,14 @@ class MessageController extends Controller
             $query->where('staff_id', Auth::user()->id ?? 0);
         }
 
-        $ret = $query->update([
-            'is_read' => 1
-        ]);
-
-        if ($ret) {
+        try {
+            $query->update([
+                'is_read' => 1
+            ]);
             return response()->json(['message' => '已读成功', 'code' => 200]);
 
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
         return response()->json(['message' => '已读失败', 'code' => 0]);
 
