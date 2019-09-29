@@ -278,6 +278,9 @@ class MessageController extends Controller
         if (!isset($communication_id)) {
             return response()->json(['message' => '会话id不能为空', 'code' => 0]);
         }
+        if ($communication_id == "false" || $communication_id == false || $communication_id == null) {
+            $communication_id = 0;
+        }
 
         $client_id = $request->get('client_id');
 
