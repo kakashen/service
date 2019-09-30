@@ -39,10 +39,9 @@ class CustomerServiceMessageController extends Controller
         $service_message = new CustomerServiceMessage();
         $data = $service_message->where(['staff_id' => $user->id])->get();
 
-        if (count($data)) {
-            return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
-        }
-        return response()->json(['message' => '获取失败', 'code' => 0]);
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+
+        // return response()->json(['message' => '获取失败', 'code' => 0]);
 
     }
 
