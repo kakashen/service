@@ -66,7 +66,7 @@ class StaffController extends Controller
     public function updateStatus(Request $request)
     {
         $status = $request->get('status', 1);
-        if ($status != 1) {
+        if ($status == 0) {
             // 有未结束会话不能为非上线状态
             $staff_id = Auth::user()->id;
             $count = Communication::where('staff_id', $staff_id)
