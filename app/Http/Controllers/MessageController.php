@@ -9,6 +9,7 @@ use App\Model\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
@@ -302,6 +303,36 @@ class MessageController extends Controller
             Log::error($e->getMessage());
         }
         return response()->json(['message' => '已读失败', 'code' => 0]);
+
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 上传图片
+     */
+    public function upload(Request $request)
+    {
+        try {
+            $path = $request->file('file')->store('image');
+            return response()->json(['message' => '上传成功', 'code' => 0, 'data' => ['image_path' => $path]]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        return response()->json(['message' => '上传失败', 'code' => 0]);
+    }
+
+    public function sts()
+    {
+        $data = [
+            'AccessKeyId' => 'LTAI4FjywpLQbCe5eCtgWVVh',
+            'AccessKeySecret' => 'zyl5d2GtZnicSJXDxLnxgPa7aUx6UI',
+            'SecurityToken' => '',
+        ];
+        return response()->json(['message' => '已读失败', 'code' => 0, 'data' => $data]);
 
     }
 }

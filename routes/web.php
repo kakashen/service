@@ -26,6 +26,7 @@ $router->group([], function () use ($router) {
 $router->post('/api/staff/login', 'StaffController@login');
 $router->post('/api/staff/register', 'StaffController@register');
 $router->post('/api/staff/info', 'StaffController@info');
+$router->get('/api/sts', 'MessageController@sts');
 
 $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($router) {
     $router->group(['middleware' => 'auth'], function () use ($router) {
@@ -79,6 +80,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('cGet', 'MessageController@cGet');
         $router->post('cGetNew', 'MessageController@cGetNew');
         $router->post('isRead', 'MessageController@isRead');
+        $router->post('upload', 'MessageController@upload');
 
 
 
