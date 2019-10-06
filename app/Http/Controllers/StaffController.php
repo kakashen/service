@@ -6,6 +6,7 @@ use App\Model\Communication;
 use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class StaffController extends Controller
@@ -47,19 +48,24 @@ class StaffController extends Controller
     //注册
     public function register(Request $request)
     {
-        if ($request->has('username') && $request->has('password')) {
-            $staff = $this->staff;
-            $staff->username = $request->input('username');
-            $staff->password = sha1($this->salt . $request->input('password'));
-            $staff->api_token = uniqid();
-            if ($staff->save()) {
-                return response()->json(['message' => '注册成功', 'code' => 200]);
-            } else {
-                return response()->json(['message' => '注册失败, 请稍后再试', 'code' => 0]);
+        $username = $request->get('username');
+        $password = $request->get('password');
+        if (empty($username) || empty($password)) {
+            return response()->json(['message' => '请输入账户名和密码', 'code' => 0]);
+        }
 
-            }
-        } else {
-            return response()->json(['message' => '请输入完整用户信息', 'code' => 0]);
+        $staff = $this->staff;
+        $staff->username = $request->input('username');
+        $staff->password = sha1($this->salt . $request->input('password'));
+        $staff->api_token = uniqid();
+
+        try {
+            $staff->save();
+            return response()->json(['message' => '注册成功', 'code' => 200]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json(['message' => '用户名已存在', 'code' => 0]);
         }
     }
 
