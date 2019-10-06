@@ -49,6 +49,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('getAll', 'MessageController@getAll');
             $router->post('getNew', 'MessageController@getNew');
             $router->post('isRead', 'MessageController@isRead');
+            $router->post('upload', 'MessageController@upload');
 
 
         });
