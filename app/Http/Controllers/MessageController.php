@@ -315,7 +315,12 @@ class MessageController extends Controller
     public function upload(Request $request)
     {
         try {
-            $path = $request->file('file')->store('image');
+            $upload = $request->file('file'); //
+            $ext = $upload->extension();
+            if (!in_array($ext, ['gif', 'jpeg', 'png', 'bmp'])) {
+                return response()->json(['message' => '请选择正确的图片格式, gif jpeg png bmp', 'code' => 0]);
+            }
+            $path = $upload->store('image');
             return response()->json(['message' => '上传成功', 'code' => 200,
                 'data' => ['image_path' => env('APP_URL', 'http://www.service.xitou.online') . '/storage/' . $path]]);
 
