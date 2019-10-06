@@ -27,7 +27,8 @@ class CustomerServiceMessageController extends Controller
         $service_message->message = $message;
         $ret = $service_message->save();
         if ($ret) {
-            return response()->json(['message' => '保存成功', 'code' => 200]);
+            $id = $service_message->getQueueableId();
+            return response()->json(['message' => '保存成功', 'code' => 200, 'data' => ['id' => $id]]);
         }
         return response()->json(['message' => '保存失败', 'code' => 0]);
 
