@@ -14,13 +14,4 @@ class Message extends Model
 
     ];
 
-    public function getContentAttribute($value)
-    {
-        if ($this->type == 2) {
-            return env('APP_URL', 'http://www.service.xitou.online') . '/storage/' . $value;
-        }
-        return $value;
-    }
-
-
 }
