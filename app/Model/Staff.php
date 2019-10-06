@@ -29,4 +29,13 @@ class Staff extends Model implements AuthenticatableContract, AuthorizableContra
     protected $hidden = [
         'password',
     ];
+
+
+    public function getAvatarAttribute($value)
+    {
+        if ($value == '') {
+            return env('STAFF_AVATAR', 'http://www.service.xitou.online/storage/image/CJu8zMB6FmUUjpW3nzzeSKRDFyX4vOO3qZUsHwnA.jpeg');
+        }
+        return $value;
+    }
 }
