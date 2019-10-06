@@ -73,7 +73,12 @@ class MessageController extends Controller
         ]);
         if ($message_id) {
             return response()->json(['message' => '发送成功', 'code' => 200,
-                'data' => ['id' => $message_id, 'created_at' => $time]]);
+                'data' => [
+                    'id' => $message_id,
+                    'communication_id' => $communication->id,
+                    'client_id' => $client_id,
+                    'created_at' => $time
+                ]]);
 
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
@@ -159,7 +164,12 @@ class MessageController extends Controller
         ]);
         if ($message_id) {
             return response()->json(['message' => '发送成功', 'code' => 200,
-                'data' => ['id' => $message_id, 'created_at' => $time]]);
+                'data' => [
+                    'id' => $message_id,
+                    'communication_id' => $communication_id,
+                    'staff_id' => $staff_id,
+                    'created_at' => $time
+                ]]);
         }
         return response()->json(['message' => '发送失败', 'code' => 0]);
     }
