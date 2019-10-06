@@ -316,7 +316,8 @@ class MessageController extends Controller
     {
         try {
             $path = $request->file('file')->store('image');
-            return response()->json(['message' => '上传成功', 'code' => 0, 'data' => ['image_path' => $path]]);
+            return response()->json(['message' => '上传成功', 'code' => 200,
+                'data' => ['image_path' => env('APP_URL', 'http://www.service.xitou.online') . '/storage/' . $path]]);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
