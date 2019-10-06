@@ -39,6 +39,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('add', 'CustomerServiceMessageController@add');
             $router->post('get', 'CustomerServiceMessageController@get');
             $router->post('update', 'CustomerServiceMessageController@update');
+            $router->post('delete', 'CustomerServiceMessageController@delete');
 
 
         });

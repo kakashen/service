@@ -70,4 +70,24 @@ class CustomerServiceMessageController extends Controller
 
     }
 
+    public function delete(Request $request)
+    {
+        $id = $request->get('id');
+        if (!isset($id)) {
+            return response()->json(['message' => '自定义消息不能为空', 'code' => 0]);
+        }
+
+        $user = Auth::user();
+
+        $ret = CustomerServiceMessage::where('id', $id)
+            ->where('staff_id', $user->id)
+            ->delete();
+
+        if ($ret) {
+            return response()->json(['message' => '删除成功', 'code' => 200]);
+        }
+        return response()->json(['message' => '删除失败', 'code' => 0]);
+
+    }
+
 }
