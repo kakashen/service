@@ -9,7 +9,6 @@ use App\Model\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
@@ -207,10 +206,10 @@ class MessageController extends Controller
         }
 
         $query = $this->message::where('id', '>', $message_id)
-            ->where('client_id', $client_id)
-            ->where('direction', 2);
-        $list = $query->get();
-        $max_read = $query->where('is_read', 1)->orderBy('id', 'desc')->first();
+            ->where('client_id', $client_id);
+
+        $list = $query->where('direction', 2)->get();
+        $max_read = $query->where('direction', 1)->where('is_read', 1)->orderBy('id', 'desc')->first();
 
         $data = [
             'list' => $list,
@@ -233,12 +232,11 @@ class MessageController extends Controller
             if (!isset($datum['client_id'], $datum['message_id'])) continue;
             $query = $this->message->where('id', '>', $datum['message_id'])
                 ->where('client_id', $datum['client_id'])
-                ->where('staff_id', $staff_id)
-                ->where('direction', 1);
-            $messages = $query->get();
+                ->where('staff_id', $staff_id);
+            $messages = $query->where('direction', 1)->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_read = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
@@ -252,11 +250,10 @@ class MessageController extends Controller
         foreach ($diffs as $diff) {
             $query = $diff_msg = $this->message
                 ->where('client_id', $diff)
-                ->where('staff_id', $staff_id)
-                ->where('direction', 1);
-            $diff_msg = $query->get();
+                ->where('staff_id', $staff_id);
+            $diff_msg = $query->where('direction', 1)->get();
 
-            $max_read = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
                 'max_read' => $max_read['id'],
