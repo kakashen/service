@@ -228,7 +228,7 @@ class MessageController extends Controller
         $ids = ActiveChat::select('client_id')->where('staff_id', $staff_id)->get()->toArray();
         $client_ids = [];
         $data = $request->get('data');
-        $data = json_decode($data, true);
+        //$data = json_decode($data, true);
         foreach ($data as $datum) {
             if (!isset($datum['client_id'], $datum['message_id'])) continue;
             $query = $this->message->where('id', '>', $datum['message_id'])
@@ -238,11 +238,11 @@ class MessageController extends Controller
             $messages = $query->get();
             $client_ids[] = $datum['client_id'];
 
-            // $max_unread = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
-                //'max_unread' => $max_unread['id'],
+                'max_unread' => $max_unread['id'],
                 'client_id' => $datum['client_id']
             ];
         }
@@ -256,10 +256,10 @@ class MessageController extends Controller
                 ->where('direction', 1);
             $diff_msg = $query->get();
 
-            // $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
+            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
-                // 'max_unread' => $max_unread['id'],
+                'max_unread' => $max_unread['id'],
                 'client_id' => $diff
             ];
         }
