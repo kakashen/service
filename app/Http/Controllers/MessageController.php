@@ -210,11 +210,11 @@ class MessageController extends Controller
             ->where('client_id', $client_id)
             ->where('direction', 2);
         $list = $query->get();
-        $max_unread = $query->where('is_read', 0)->orderBy('id', 'desc')->first();
+        $max_read = $query->where('is_read', 1)->orderBy('id', 'desc')->first();
 
         $data = [
             'list' => $list,
-            'max_unread' => $max_unread['id']
+            'max_read' => $max_read['id']
         ];
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
@@ -238,11 +238,11 @@ class MessageController extends Controller
             $messages = $query->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
-                'max_unread' => $max_unread['id'],
+                'max_read' => $max_read['id'],
                 'client_id' => $datum['client_id']
             ];
         }
@@ -256,10 +256,10 @@ class MessageController extends Controller
                 ->where('direction', 1);
             $diff_msg = $query->get();
 
-            $max_unread = $query->where('is_read', 0)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $query->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
-                'max_unread' => $max_unread['id'],
+                'max_read' => $max_read['id'],
                 'client_id' => $diff
             ];
         }
