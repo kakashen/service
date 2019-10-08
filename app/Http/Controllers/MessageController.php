@@ -228,7 +228,7 @@ class MessageController extends Controller
         $ids = ActiveChat::select('client_id')->where('staff_id', $staff_id)->get()->toArray();
         $client_ids = [];
         $data = $request->get('data');
-        //$data = json_decode($data, true);
+        $data = json_decode($data, true);
         foreach ($data as $datum) {
             if (!isset($datum['client_id'], $datum['message_id'])) continue;
             $query = $this->message->where('id', '>', $datum['message_id'])
