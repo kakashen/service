@@ -205,10 +205,9 @@ class MessageController extends Controller
             return response()->json(['message' => '客户id不能为空', 'code' => 0]);
         }
 
-        $query = $this->message::where('id', '>', $message_id)
-            ->where('client_id', $client_id);
+        $query = $this->message->where('client_id', $client_id);
 
-        $list = $query->where('direction', 2)->get();
+        $list = $query->where('id', '>', $message_id)->where('direction', 2)->get();
         $max_read = $query->where('direction', 1)->where('is_read', 1)->orderBy('id', 'desc')->first();
 
         $data = [
@@ -230,10 +229,9 @@ class MessageController extends Controller
         $data = json_decode($data, true);
         foreach ($data as $datum) {
             if (!isset($datum['client_id'], $datum['message_id'])) continue;
-            $query = $this->message->where('id', '>', $datum['message_id'])
-                ->where('client_id', $datum['client_id'])
+            $query = $this->message->where('client_id', $datum['client_id'])
                 ->where('staff_id', $staff_id);
-            $messages = $query->where('direction', 1)->get();
+            $messages = $query->where('id', '>', $datum['message_id'])->where('direction', 1)->get();
             $client_ids[] = $datum['client_id'];
 
             $max_read = $query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
