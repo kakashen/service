@@ -206,9 +206,10 @@ class MessageController extends Controller
         }
 
         $query = $this->message->where('client_id', $client_id);
+        $read_query = clone $query;
 
         $list = $query->where('id', '>', $message_id)->where('direction', 2)->get();
-        $max_read = $query->where('direction', 1)->where('is_read', 1)->orderBy('id', 'desc')->first();
+        $max_read = $read_query->where('direction', 1)->where('is_read', 1)->orderBy('id', 'desc')->first();
 
         $data = [
             'list' => $list,
@@ -231,10 +232,12 @@ class MessageController extends Controller
             if (!isset($datum['client_id'], $datum['message_id'])) continue;
             $query = $this->message->where('client_id', $datum['client_id'])
                 ->where('staff_id', $staff_id);
+            $read_query = clone $query;
+
             $messages = $query->where('id', '>', $datum['message_id'])->where('direction', 1)->get();
             $client_ids[] = $datum['client_id'];
 
-            $max_read = $query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $read_query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
 
             $list[] = [
                 'list' => $messages,
@@ -249,9 +252,12 @@ class MessageController extends Controller
             $query = $diff_msg = $this->message
                 ->where('client_id', $diff)
                 ->where('staff_id', $staff_id);
+
+            $read_query = clone $query;
+
             $diff_msg = $query->where('direction', 1)->get();
 
-            $max_read = $query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
+            $max_read = $read_query->where('direction', 2)->where('is_read', 1)->select('id')->orderBy('id', 'desc')->first();
             $list[] = [
                 'list' => $diff_msg,
                 'max_read' => $max_read['id'],
