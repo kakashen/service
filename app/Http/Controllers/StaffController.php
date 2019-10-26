@@ -116,4 +116,14 @@ class StaffController extends Controller
         $data = $this->staff->select('status','id')->find($staff_id);
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * 客服列表
+     */
+    public function list()
+    {
+        $data = $this->staff->select('id', 'username', 'avatar', 'status')->get();
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+    }
 }

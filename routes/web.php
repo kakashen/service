@@ -37,6 +37,11 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
         });
 
+        $router->group(['prefix' => '/admin'], function () use ($router) {
+            $router->post('list', 'StaffController@list');
+
+        });
+
         $router->group(['prefix' => 'service'], function () use ($router) {
             $router->post('add', 'CustomerServiceMessageController@add');
             $router->post('get', 'CustomerServiceMessageController@get');
