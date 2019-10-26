@@ -121,7 +121,7 @@ class StaffController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * 客服列表
      */
-    public function list()
+    public function staffList()
     {
         $data = $this->staff->select('id', 'username', 'avatar', 'status')->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
