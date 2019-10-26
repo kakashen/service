@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Communication;
+use App\Model\Message;
 use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -125,5 +126,31 @@ class StaffController extends Controller
     {
         $data = $this->staff->select('id', 'username', 'avatar', 'status')->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * 后台-首页数据
+     */
+    public function index(Request $request)
+    {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+        $data = [];
+        // 客户消息数
+        $client_message_count = Message::where('direction', 1)->whereBetween('created_at', [$start_time, $end_time])->count();
+        // 客服消息数
+        $staff_message_count = Message::where('direction', 2)->whereBetween('created_at', [$start_time, $end_time])->count();
+        // 会话数
+        $comm_count = Communication::whereBetween('created_at', [$start_time, $end_time])->count();
+
+        $data['client_message_count'] = $client_message_count;
+        $data['staff_message_count'] = $staff_message_count;
+
+        $data['comm_count'] = $comm_count;
+
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+
     }
 }

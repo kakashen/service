@@ -41,6 +41,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('staffList', 'StaffController@staffList');
             $router->post('addStaff', 'StaffController@register');
             $router->post('commList', 'CommunicationController@commList');
+            $router->post('index', 'StaffController@index');
 
 
         });
