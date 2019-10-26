@@ -105,4 +105,15 @@ class StaffController extends Controller
 
 
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * 获取客服状态
+     */
+    public function getStatus()
+    {
+        $staff_id = Auth::user()->id;
+        $data = $this->staff->select('status','id')->find($staff_id);
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+    }
 }
