@@ -169,4 +169,11 @@ class StaffController extends Controller
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
     }
+
+    public function admin()
+    {
+        $user =  Auth::user();
+        $user['roles'] = ['admin'];
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $user]);
+    }
 }
