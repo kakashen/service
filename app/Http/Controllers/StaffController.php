@@ -137,19 +137,35 @@ class StaffController extends Controller
     {
         $start_time = $request->get('start_time');
         $end_time = $request->get('end_time');
+        // 计算日期段内有多少天
+        $days = ($end_time-$start_time)/86400+1;
+
+        // 保存每天日期
+        $date = [];
+
+        for($i=0; $i<$days; $i++){
+            $date[] = date('Y-m-d', $start_time+(86400*$i));
+        }
+
         $data = [];
-        // 客户消息数
-        $client_message_count = Message::where('direction', 1)->whereBetween('created_at', [$start_time, $end_time])->count();
-        // 客服消息数
-        $staff_message_count = Message::where('direction', 2)->whereBetween('created_at', [$start_time, $end_time])->count();
-        // 会话数
-        $comm_count = Communication::whereBetween('created_at', [$start_time, $end_time])->count();
 
-        $data['client_message_count'] = $client_message_count;
-        $data['staff_message_count'] = $staff_message_count;
+        foreach ($date as $k => $item) {
+            $list = [];
+            $end = isset($date[$k+1]) ? $date[$k+1] : date('Y-m-d', strtotime($item)+(86400));
+            // 客户消息数
+            $client_message_count = Message::where('direction', 1)->whereBetween('created_at', [$item, $end])->count();
+            // 客服消息数
+            $staff_message_count = Message::where('direction', 2)->whereBetween('created_at', [$item, $end])->count();
+            // 会话数
+            $comm_count = Communication::whereBetween('created_at', [$item, $end])->count();
 
-        $data['comm_count'] = $comm_count;
+            $list['client_message_count'] = $client_message_count;
+            $list['staff_message_count'] = $staff_message_count;
+            $list['comm_count'] = $comm_count;
+            $list['date'] = $item;
 
+            $data[] = $list;
+        }
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
     }
