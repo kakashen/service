@@ -56,13 +56,14 @@ class StaffController extends Controller
         }
 
         $staff = $this->staff;
-        $staff->username = $request->input('username');
-        $staff->password = sha1($this->salt . $request->input('password'));
-        $staff->api_token = uniqid();
 
         try {
-            $staff->save();
-            return response()->json(['message' => '注册成功', 'code' => 200]);
+            $staff_id = $staff->insertGetId([
+                'username' => $request->input('username'),
+                'password' => sha1($this->salt . $request->input('password')),
+                'api_token' => uniqid(),
+            ]);
+            return response()->json(['message' => '注册成功', 'code' => 200, 'data' => ['id' => $staff_id]]);
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
