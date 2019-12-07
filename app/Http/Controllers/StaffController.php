@@ -240,4 +240,18 @@ class StaffController extends Controller
 
         return response()->json(['message' => '修改失败', 'code' => 0]);
     }
+
+    // 重置密码
+    public function resetPass(Request $request)
+    {
+        $id = $request->get('staff_id');
+        if (!isset($id)) {
+            return response()->json(['message' => '客服id不能为空', 'code' => 0]);
+        }
+        $this->staff->where('id', $id)->update([
+            'password' => sha1($this->salt . '111111'),
+        ]);
+
+        return response()->json(['message' => '重置成功', 'code' => 200]);
+    }
 }
