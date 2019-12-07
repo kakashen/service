@@ -90,6 +90,8 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
+    // 评分
+    $router->post('client/grade', 'StaffController@grade');
     // 消息
     $router->group(['prefix' => 'client/message'], function () use ($router) {
         $router->post('cSend', 'MessageController@cSend');

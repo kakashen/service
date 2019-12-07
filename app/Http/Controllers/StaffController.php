@@ -264,4 +264,27 @@ class StaffController extends Controller
         ]);
         return response()->json(['message' => '修改成功', 'code' => 200]);
     }
+
+    // 客户评分
+    public function grade(Request $request)
+    {
+        $client_id = $request->get('client_id');
+        $staff_id = $request->get('staff_id');
+        $grade = $request->get('grade');
+        $communication_id = $request->get('communication_id');
+        if (!isset($client_id, $staff_id, $grade, $communication_id)) {
+            return response()->json(['message' => '参数错误', 'code' => 0]);
+        }
+
+        DB::table('staff_grades')->updateOrInsert([
+           'client_id' => $client_id,
+            'staff_id' => $staff_id,
+            'communication_id' => $communication_id,
+        ], [
+            'grade' => $grade,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+        return response()->json(['message' => '感谢您的评价', 'code' => 200]);
+
+    }
 }
