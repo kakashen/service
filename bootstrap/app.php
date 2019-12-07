@@ -64,6 +64,7 @@ $app->singleton(
  $app->routeMiddleware([
      'auth' => App\Http\Middleware\Authenticate::class,
      'message' => App\Http\Middleware\MessageMiddleware::class,
+     'admin' => App\Http\Middleware\CheckAdmin::class,
 
  ]);
 

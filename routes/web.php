@@ -37,7 +37,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('updateAvatar', 'StaffController@updateAvatar');
         });
 
-        $router->group(['prefix' => '/admin'], function () use ($router) {
+        $router->group(['middleware' => 'admin', 'prefix' => '/admin'], function () use ($router) {
             $router->post('staffList', 'StaffController@staffList');
             $router->post('addStaff', 'StaffController@register');
             $router->post('commList', 'CommunicationController@commList');
