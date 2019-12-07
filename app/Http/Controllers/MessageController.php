@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommunicationEvent;
 use App\Model\ActiveChat;
 use App\Model\Communication;
 use App\Model\Message;
@@ -223,6 +224,11 @@ class MessageController extends Controller
     public function getNew(Request $request)
     {
         $staff_id = Auth::user()->id;
+
+        $comm = new Communication();
+        $comm->staff_id = $staff_id;
+        event(new CommunicationEvent($comm));
+
         $list = [];
         $ids = ActiveChat::select('client_id')->where('staff_id', $staff_id)->get()->toArray();
         $client_ids = [];
