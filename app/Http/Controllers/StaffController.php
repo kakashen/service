@@ -7,6 +7,7 @@ use App\Model\Message;
 use App\Model\Staff;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -176,5 +177,30 @@ class StaffController extends Controller
         $user =  Auth::user();
         $user['roles'] = ['admin'];
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $user]);
+    }
+
+    // 上传客服头像
+    public function uploadAvatar(Request $request)
+    {
+        try {
+            $upload = $request->file('file');
+            $ext = $upload->extension();
+            if (!in_array($ext, ['gif', 'jpeg', 'png', 'bmp'])) {
+                return response()->json(['message' => '请选择正确的图片格式, gif jpeg png bmp', 'code' => 0]);
+            }
+            $path = $upload->store('avatars');
+
+            DB::table('avatars')->insert([
+                'avatar' => $path
+            ]);
+
+            return response()->json(['message' => '上传成功', 'code' => 200,
+                'data' => ['image_path' => env('APP_URL', 'http://www.service.xitou.online') . '/storage/' . $path]]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        return response()->json(['message' => '上传失败', 'code' => 0]);
     }
 }
