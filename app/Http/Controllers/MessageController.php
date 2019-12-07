@@ -352,4 +352,13 @@ class MessageController extends Controller
         return response()->json(['message' => '已读失败', 'code' => 0, 'data' => $data]);
 
     }
+
+    // 会话详情
+    public function commDetail(Request $request)
+    {
+        $comm_id = $request->get('communication_id');
+        $data = $this->message->where('communication_id', $comm_id)->get();
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+
+    }
 }
