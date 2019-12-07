@@ -35,6 +35,9 @@ class StaffController extends Controller
 
         $staff = $this->staff::where('username', $username)->where('password', sha1($this->salt . $password))->first();
         if ($staff) {
+            if ($staff->active == 0) {
+                return response()->json(['message' => '您的账号已被禁用, 请联系管理员', 'code' => 0]);
+            }
             $staff->api_token = uniqid();
             $staff->status = $request->get('status') ?? 1; // 登录状态
             $staff->save();
