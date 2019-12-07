@@ -203,4 +203,16 @@ class StaffController extends Controller
 
         return response()->json(['message' => '上传失败', 'code' => 0]);
     }
+
+    // 头像列表
+    public function avatarList()
+    {
+        $data = DB::table('avatars')->get();
+        foreach ($data as &$datum) {
+            $datum->avatar = env('APP_URL', 'http://www.service.xitou.online') . '/storage/' . $datum->avatar;
+        }
+        unset($datum);
+        return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
+
+    }
 }
