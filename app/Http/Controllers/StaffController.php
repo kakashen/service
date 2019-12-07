@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class StaffController extends Controller
 {
@@ -116,7 +115,7 @@ class StaffController extends Controller
     public function getStatus()
     {
         $staff_id = Auth::user()->id;
-        $data = $this->staff->select('status','id')->find($staff_id);
+        $data = $this->staff->select('status', 'id')->find($staff_id);
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
 
@@ -140,20 +139,20 @@ class StaffController extends Controller
         $start_time = $request->get('start_time');
         $end_time = $request->get('end_time');
         // 计算日期段内有多少天
-        $days = ($end_time-$start_time)/86400+1;
+        $days = ($end_time - $start_time) / 86400 + 1;
 
         // 保存每天日期
         $date = [];
 
-        for($i=0; $i<$days; $i++){
-            $date[] = date('Y-m-d', $start_time+(86400*$i));
+        for ($i = 0; $i < $days; $i++) {
+            $date[] = date('Y-m-d', $start_time + (86400 * $i));
         }
 
         $data = [];
 
         foreach ($date as $k => $item) {
             $list = [];
-            $end = isset($date[$k+1]) ? $date[$k+1] : date('Y-m-d', strtotime($item)+(86400));
+            $end = isset($date[$k + 1]) ? $date[$k + 1] : date('Y-m-d', strtotime($item) + (86400));
             // 客户消息数
             $client_message_count = Message::where('direction', 1)->whereBetween('created_at', [$item, $end])->count();
             // 客服消息数
@@ -174,7 +173,7 @@ class StaffController extends Controller
 
     public function admin()
     {
-        $user =  Auth::user();
+        $user = Auth::user();
         $user['roles'] = ['admin'];
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $user]);
     }
@@ -214,5 +213,26 @@ class StaffController extends Controller
         unset($datum);
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
+    }
+
+    // 客服启用1 禁用0
+    public function activeStaff(Request $request)
+    {
+        $active = $request->get('active');
+        $id = $request->get('staff_id');
+        if (!isset($active) || ($active != 0 && $active != 1)) {
+            return response()->json(['message' => 'active 有误', 'code' => 0]);
+        }
+
+        if (!isset($id)) {
+            return response()->json(['message' => 'staff_id 有误', 'code' => 0]);
+        }
+
+        try {
+            $this->staff->where('id', $id)->update(['active' => $active]);
+            return response()->json(['message' => '修改成功', 'code' => 200]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }
