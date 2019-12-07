@@ -35,6 +35,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('updateStatus', 'StaffController@updateStatus');
             $router->post('getStatus', 'StaffController@getStatus');
             $router->post('updateAvatar', 'StaffController@updateAvatar');
+            $router->post('avatarList', 'StaffController@avatarList');
         });
 
         $router->group(['middleware' => 'admin', 'prefix' => '/admin'], function () use ($router) {
@@ -44,7 +45,6 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('index', 'StaffController@index');
             $router->post('admin', 'StaffController@admin');
             $router->post('uploadAvatar', 'StaffController@uploadAvatar');
-            $router->post('avatarList', 'StaffController@avatarList');
             $router->post('activeStaff', 'StaffController@activeStaff');
             $router->post('resetPass', 'StaffController@resetPass');
         });
