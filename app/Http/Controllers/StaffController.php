@@ -234,5 +234,7 @@ class StaffController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+
+        return response()->json(['message' => '修改失败', 'code' => 0]);
     }
 }
