@@ -293,24 +293,25 @@ class StaffController extends Controller
             return response()->json(['message' => '参数错误', 'code' => 0]);
         }
 
-        DB::table('staff_grades')->updateOrInsert([
-           'client_id' => $client_id,
+        $ret = DB::table('staff_grades')->updateOrInsert([
+            'client_id' => $client_id,
             'staff_id' => $staff_id,
             'communication_id' => $communication_id,
         ], [
             'grade' => $grade,
-            'updated_at' => date('Y-m-d H:i:s')
+            // 'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        $query = Staff::where('id', $staff_id);
-        $grade_num = $query->first()->grade_num;
-        $grade_avg = $query->first()->grade_avg;
+        if ($ret) {
+            $query = Staff::where('id', $staff_id);
+            $grade_num = $query->first()->grade_num;
+            $grade_avg = $query->first()->grade_avg;
 
-        $query->update([
-            'grade_num' => $grade_num + 1,
-            'grade_avg' => floor(($grade_avg * $grade_num + $grade) / ($grade_num + 1))
-        ]);
-
+            $query->update([
+                'grade_num' => $grade_num + 1,
+                'grade_avg' => floor(($grade_avg * $grade_num + $grade) / ($grade_num + 1))
+            ]);
+        }
         return response()->json(['message' => '感谢您的评价', 'code' => 200]);
 
     }
