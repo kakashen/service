@@ -275,7 +275,8 @@ class MessageController extends Controller
 
     private function getIdleStaffIds(): array
     {
-        return Staff::select('id')->where('status', 1)->get()->toArray();
+        return Staff::select('id')->where('status', 1)
+            ->where('active', 1)->get()->toArray();
     }
 
     private function getCommunicationId($client_id, $staff_id)
