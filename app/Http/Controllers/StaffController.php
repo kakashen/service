@@ -266,12 +266,18 @@ class StaffController extends Controller
         return response()->json(['message' => '修改成功', 'code' => 200]);
     }
 
-    // 修改头像
-    public function updateAvatar(Request $request)
+    // 修改信息
+    public function updateInfo(Request $request)
     {
         $avatar = $request->get('avatar');
+        $nickname = $request->get('nickname');
+        if (!isset($avatar, $nickname)) {
+            return response()->json(['message' => '参数错误', 'code' => 0]);
+
+        }
         $this->staff->where('id', Auth::user()->id)->update([
-            'avatar' => $avatar
+            'avatar' => $avatar,
+            'nickname' => $nickname
         ]);
         return response()->json(['message' => '修改成功', 'code' => 200]);
     }
