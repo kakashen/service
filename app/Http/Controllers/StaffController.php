@@ -302,7 +302,7 @@ class StaffController extends Controller
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 
-        $query = Staff::where('staff_id', $staff_id);
+        $query = Staff::where('id', $staff_id);
         $grade_num = $query->first()->grade_num;
         $grade_avg = $query->first()->grade_avg;
 
