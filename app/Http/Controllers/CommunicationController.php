@@ -43,7 +43,8 @@ class CommunicationController extends Controller
             return response()->json(['message' => '客户id不能为空', 'code' => 0]);
         }
         $data = $this->communication->where('client_id', $client_id)
-            ->orderBy('updated_at', 'desc')->get();
+            // ->orderBy('id', 'desc')
+            ->get();
         foreach ($data as &$datum) {
             $comm_id = $datum->id;
             $staff_id = $datum->staff_id;
