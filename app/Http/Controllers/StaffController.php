@@ -54,7 +54,9 @@ class StaffController extends Controller
     {
         $username = $request->get('username');
         $password = $request->get('password');
-        if (empty($username) || empty($password)) {
+        $nickname = $request->get('nickname');
+
+        if (empty($username) || empty($password) || empty($nickname)) {
             return response()->json(['message' => '请输入账户名和密码', 'code' => 0]);
         }
 
@@ -62,8 +64,9 @@ class StaffController extends Controller
 
         try {
             $staff_id = $staff->insertGetId([
-                'username' => $request->input('username'),
+                'username' => $username,
                 'password' => sha1($this->salt . $request->input('password')),
+                'nickname' => $nickname,
                 'api_token' => uniqid(),
             ]);
             return response()->json(['message' => '注册成功', 'code' => 200, 'data' => ['id' => $staff_id]]);
