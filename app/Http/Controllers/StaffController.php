@@ -128,7 +128,9 @@ class StaffController extends Controller
      */
     public function staffList()
     {
-        $data = $this->staff->select('id', 'username', 'avatar', 'status', 'active')->get();
+        $data = $this->staff
+            ->select('id', 'username', 'avatar', 'status', 'active', 'grade_avg')
+            ->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
 
