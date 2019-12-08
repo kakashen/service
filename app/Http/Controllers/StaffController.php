@@ -104,7 +104,7 @@ class StaffController extends Controller
             return response()->json(['message' => '客服id不能为空', 'code' => 0]);
         }
 
-        $info = Staff::select(['id', 'username', 'avatar'])
+        $info = Staff::select(['id', 'nickname', 'avatar'])
             ->where('id', $staff_id)->first();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $info]);
 
