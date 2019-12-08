@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Communication;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommunicationController extends Controller
 {
@@ -43,6 +44,19 @@ class CommunicationController extends Controller
         }
         $data = $this->communication->where('client_id', $client_id)
             ->orderBy('updated_at', 'desc')->get();
+        foreach ($data as &$datum) {
+            $comm_id = $datum->id;
+            $staff_id = $datum->staff_id;
+            $grade = DB::table('staff_grades')->where('staff_id', $staff_id)
+                ->where('client_id', $client_id)->where('communication_id', $comm_id)->first();
+            $datum->isGrade = 0;
+            $datum->grade = null;
+            if ($grade) {
+                $datum->isGrade = 1;
+                $datum->grade = $grade->grade;
+            }
+        }
+        unset($datum);
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
 
