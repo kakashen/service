@@ -308,7 +308,7 @@ class StaffController extends Controller
 
         $query->update([
             'grade_num' => $grade_num + 1,
-            'grade_avg' => floor($grade_avg * $grade_num / ($grade_num + 1))
+            'grade_avg' => floor(($grade_avg * $grade_num + $grade) / ($grade_num + 1))
         ]);
 
         return response()->json(['message' => '感谢您的评价', 'code' => 200]);
