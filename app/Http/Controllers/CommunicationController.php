@@ -96,12 +96,15 @@ class CommunicationController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * 后台-会话列表
      */
-    public function commList()
+    public function commList(Request $request)
     {
-        $data = $this->communication->orderBy('id', 'desc')->get();
+        $per_page = $request->get('per_page');
+
+        $data = $this->communication->orderBy('id', 'desc')->paginate((int)$per_page);
 
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
