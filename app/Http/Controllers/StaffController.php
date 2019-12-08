@@ -132,7 +132,7 @@ class StaffController extends Controller
     public function staffList()
     {
         $data = $this->staff
-            ->select('id', 'username', 'avatar', 'status', 'active', 'grade_avg')
+            ->select('id', 'username', 'avatar', 'status', 'active', 'grade_avg', 'nickname')
             ->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
     }
