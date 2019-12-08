@@ -46,7 +46,7 @@ $router->group(['middleware' => 'auth', 'prefix' => 'api'], function () use ($ro
             $router->post('admin', 'StaffController@admin');
             $router->post('uploadAvatar', 'StaffController@uploadAvatar');
             $router->post('activeStaff', 'StaffController@activeStaff');
-            $router->post('resetPass', 'StaffController@resetPass');
+            $router->post('updatePass', 'StaffController@updatePass');
             $router->post('commDetail', 'MessageController@commDetail');
 
         });

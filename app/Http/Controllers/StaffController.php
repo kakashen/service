@@ -243,18 +243,24 @@ class StaffController extends Controller
         return response()->json(['message' => '修改失败', 'code' => 0]);
     }
 
-    // 重置密码
-    public function resetPass(Request $request)
+    // 修改密码
+    public function updatePass(Request $request)
     {
         $id = $request->get('staff_id');
         if (!isset($id)) {
             return response()->json(['message' => '客服id不能为空', 'code' => 0]);
         }
+
+        $password = $request->get('staff_pass');
+        if (!isset($password)) {
+            return response()->json(['message' => '客服密码不能为空', 'code' => 0]);
+        }
+
         $this->staff->where('id', $id)->update([
-            'password' => sha1($this->salt . '111111'),
+            'password' => sha1($this->salt . $password),
         ]);
 
-        return response()->json(['message' => '重置成功', 'code' => 200]);
+        return response()->json(['message' => '修改成功', 'code' => 200]);
     }
 
     // 修改头像
@@ -286,6 +292,16 @@ class StaffController extends Controller
             'grade' => $grade,
             'updated_at' => date('Y-m-d H:i:s')
         ]);
+
+        $query = Staff::where('staff_id', $staff_id);
+        $grade_num = $query->first()->grade_num;
+        $grade_avg = $query->first()->grade_avg;
+
+        $query->update([
+            'grade_num' => $grade_num + 1,
+            'grade_avg' => floor($grade_avg * $grade_num / ($grade_num + 1))
+        ]);
+
         return response()->json(['message' => '感谢您的评价', 'code' => 200]);
 
     }
