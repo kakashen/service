@@ -289,6 +289,11 @@ class MessageController extends Controller
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
+
+        ActiveChat::updateOrInsert([
+            'client_id' => $client_id,
+            'staff_id' => $staff_id
+        ]);
         return $communication_id;
     }
 

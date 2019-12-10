@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\ActiveChat;
+use App\Model\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +24,20 @@ class ActiveChatController extends Controller
     public function get()
     {
         $staff_id = Auth::user()->id;
+        /*$client_ids = Message::select('client_id')
+            ->where('is_read', 0)->where('staff_id', $staff_id)
+            ->distinct()->get()->toArray();
+
+        if (count($client_ids)) {
+
+            foreach ($client_ids as $client_id) {
+                $this->chat->updateOrInsert([
+                    'client_id' => $client_id['client_id'],
+                    'staff_id' => $staff_id
+                ]);
+            }
+        }*/
+
         $data = $this->chat->where('staff_id', $staff_id)->get();
         return response()->json(['message' => '获取成功', 'code' => 200, 'data' => $data]);
 
