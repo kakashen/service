@@ -111,7 +111,7 @@ class MessageController extends Controller
     {
         $client_id = $request->get('client_id');
         $staff_id = $request->get('staff_id');
-        if (!isset($staff_id)) {
+        if (empty($staff_id)) {
             $ids = array_column($this->getIdleStaffIds(), 'id');
             $count = count($ids);
             if ($count == 0) {
@@ -276,7 +276,8 @@ class MessageController extends Controller
     private function getIdleStaffIds(): array
     {
         return Staff::select('id')->where('status', 1)
-            ->where('active', 1)->get()->toArray();
+            ->where('active', 1)->where('username', '!=', 'admin')
+            ->get()->toArray();
     }
 
     private function getCommunicationId($client_id, $staff_id)
