@@ -53,7 +53,8 @@ class ActiveChatController extends Controller
         $staff_id = Auth::user()->id;
 
         $ret = $this->chat->where('staff_id', $staff_id)
-            ->delete($chat__id);
+            ->where('id', $chat__id)
+            ->delete();
 
         if ($ret) {
             return response()->json(['message' => '删除成功', 'code' => 200]);
