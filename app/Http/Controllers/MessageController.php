@@ -357,11 +357,7 @@ class MessageController extends Controller
 
     public function sts()
     {
-        $data = [
-            'AccessKeyId' => 'LTAI4FjywpLQbCe5eCtgWVVh',
-            'AccessKeySecret' => 'zyl5d2GtZnicSJXDxLnxgPa7aUx6UI',
-            'SecurityToken' => '',
-        ];
+        
         return response()->json(['message' => '已读失败', 'code' => 0, 'data' => $data]);
 
     }
